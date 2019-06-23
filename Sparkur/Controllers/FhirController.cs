@@ -7,6 +7,7 @@ using Spark.Engine.Core;
 using Spark.Engine.Extensions;
 using Spark.Engine.Utility;
 using Spark.Service;
+using Sparkur.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -22,10 +23,10 @@ namespace Sparkur.Controllers
         private readonly IFhirService _fhirService;
         private readonly SparkSettings _settings;
 
-        public FhirController(IFhirService fhirService)
+        public FhirController(IFhirService fhirService, ISettings settings)
         {
             _fhirService = fhirService ?? throw new ArgumentNullException(nameof(fhirService));
-            //_settings = settings;
+            _settings = settings.SparkSettings;
         }
 
         [HttpGet("{type}/{id}")]
