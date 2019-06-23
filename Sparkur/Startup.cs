@@ -13,6 +13,8 @@ using Microsoft.EntityFrameworkCore;
 using Sparkur.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Spark.Engine;
+using Spark.Mongo;
 
 namespace Sparkur
 {
@@ -28,6 +30,15 @@ namespace Sparkur
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            SparkSettings sparkSettings = new SparkSettings();
+            Configuration.Bind("SparkSettings", sparkSettings);
+
+            // TODO: Update after next alpha
+            MongStoreSettings storeSettings = new MongStoreSettings();
+            Configuration.Bind("MongStoreSettings", storeSettings);
+
+            // services.AddSingleton<ISettings, Settings>(e => Configuration.Get<Settings>());
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
