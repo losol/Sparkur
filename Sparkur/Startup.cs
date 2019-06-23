@@ -34,7 +34,7 @@ namespace Sparkur
             SparkSettings sparkSettings = new SparkSettings();
             Configuration.Bind("SparkSettings", sparkSettings);
 
-            // TODO: Update after next alpha
+            // TODO: Update mong=>mongo after next alpha
             MongStoreSettings storeSettings = new MongStoreSettings();
             Configuration.Bind("MongStoreSettings", storeSettings);
 
