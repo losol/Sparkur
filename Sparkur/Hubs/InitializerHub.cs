@@ -9,15 +9,11 @@ using System.Text;
 using Spark.Engine.Interfaces;
 using Microsoft.AspNetCore.SignalR;
 using Sparkur.Config;
+using Sparkur.Helpers;
+using System.Threading.Tasks;
 
 namespace Sparkur.Hubs
 {
-	
-    public class ImportProgressMessage
-    {
-        public int Progress;
-        public string Message;
-    }
 
     public class InitializerHub : Hub
     {
@@ -72,7 +68,7 @@ namespace Sparkur.Hubs
 
         private int _progress = 0;
 
-        private void Progress(string message, int progress)
+        public async System.Threading.Tasks.Task SendProgressUpdate(string message, int progress)
         {
 
             _progress = progress;
@@ -83,12 +79,12 @@ namespace Sparkur.Hubs
                 Progress = progress
             };
 
-			Clients.All.SendAsync("UpdateProgress", msg);
+			await Clients.All.SendAsync("UpdateProgress", msg);
         }
 
-        private void Progress(string message)
+        private async System.Threading.Tasks.Task Progress(string message)
         {
-            Progress(message, _progress);
+            SendProgressUpdate(message, _progress);
         }
 
         private ImportProgressMessage Message(string message, int idx)
@@ -107,11 +103,11 @@ namespace Sparkur.Hubs
             try
             {
                 //cleans store and index
-                Progress("Clearing the database...", 0);
+                SendProgressUpdate("Clearing the database...", 0);
                 fhirStoreAdministration.Clean();
                 fhirIndex.Clean();
 
-                Progress("Loading examples data...", 5);
+                SendProgressUpdate("Loading examples data...", 5);
                 this.resources = GetExampleData();
 
                 var resarray = resources.ToArray();
@@ -150,13 +146,18 @@ namespace Sparkur.Hubs
 
                 }
 
-                Progress(messages.ToString(), 100);
+                SendProgressUpdate(messages.ToString(), 100);
             }
             catch (Exception e)
             {
                 Progress("Error: " + e.Message);
             }
         }
+		    public class ImportProgressMessage
+    {
+        public int Progress;
+        public string Message;
+    }
     }
 
 }
