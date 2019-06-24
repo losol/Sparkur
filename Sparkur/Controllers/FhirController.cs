@@ -23,10 +23,10 @@ namespace Sparkur.Controllers
         private readonly IFhirService _fhirService;
         private readonly SparkSettings _settings;
 
-        public FhirController(IFhirService fhirService, ISettings settings)
+        public FhirController(IFhirService fhirService, SparkSettings settings)
         {
             _fhirService = fhirService ?? throw new ArgumentNullException(nameof(fhirService));
-            _settings = settings.SparkSettings;
+            _settings = settings;
         }
 
         [HttpGet("{type}/{id}")]

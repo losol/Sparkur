@@ -16,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Spark.Engine;
 using Spark.Mongo;
 using Sparkur.Services;
+using Spark.Engine.Extensions;
 
 namespace Sparkur
 {
@@ -38,9 +39,13 @@ namespace Sparkur
             MongStoreSettings storeSettings = new MongStoreSettings();
             Configuration.Bind("MongStoreSettings", storeSettings);
 
-            services.AddSingleton<ISettings,Settings>(e => 
-                Configuration.Get<Settings>()
-            );
+            //services.AddSingleton<ISettings,Settings>(e => 
+            //    Configuration.Get<Settings>()
+            //);
+            
+            services.AddMongoFhirStore(storeSettings);
+            services.AddFhir(sparkSettings);
+            services.AddSingleton<SparkSettings>(sparkSettings);
 
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -79,6 +84,8 @@ namespace Sparkur
             app.UseCookiePolicy();
 
             app.UseAuthentication();
+
+            app.UseFhir();
 
             app.UseMvc(routes =>
             {
