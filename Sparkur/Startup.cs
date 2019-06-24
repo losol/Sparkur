@@ -17,6 +17,7 @@ using Spark.Engine;
 using Spark.Mongo;
 using Sparkur.Services;
 using Spark.Engine.Extensions;
+using Sparkur.Hubs;
 
 namespace Sparkur
 {
@@ -62,6 +63,8 @@ namespace Sparkur
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -84,6 +87,11 @@ namespace Sparkur
             app.UseCookiePolicy();
 
             app.UseAuthentication();
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<ChatHub>("/chatHub");
+            });
 
             app.UseFhir(routes =>
             {
