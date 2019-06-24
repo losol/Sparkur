@@ -5,7 +5,7 @@ using Hl7.Fhir.Model;
 using Spark.Engine.Extensions;
 using Sparkur.Helpers;
 
-namespace Spark.Import
+namespace Sparkur.Helpers
 {
 
     public static class Examples
