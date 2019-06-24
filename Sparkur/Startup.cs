@@ -15,9 +15,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Spark.Engine;
 using Spark.Mongo;
-using Sparkur.Services;
 using Spark.Engine.Extensions;
 using Sparkur.Hubs;
+using Sparkur.Config;
 
 namespace Sparkur
 {
@@ -40,9 +40,7 @@ namespace Sparkur
             MongStoreSettings storeSettings = new MongStoreSettings();
             Configuration.Bind("MongStoreSettings", storeSettings);
 
-            //services.AddSingleton<ISettings,Settings>(e => 
-            //    Configuration.Get<Settings>()
-            //);
+            services.Configure<ExamplesSettings>(Configuration.GetSection("ExamplesSettings"));
             
             services.AddMongoFhirStore(storeSettings);
             services.AddFhir(sparkSettings);
