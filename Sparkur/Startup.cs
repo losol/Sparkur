@@ -85,14 +85,14 @@ namespace Sparkur
 
             app.UseAuthentication();
 
-            app.UseFhir();
-
-            app.UseMvc(routes =>
+            app.UseFhir(routes =>
             {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            app.UseMvc();
         }
     }
 }
