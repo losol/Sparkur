@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Spark.Engine.Interfaces;
-using Spark.Engine.Service;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Options;
 using Sparkur.Config;
 
-namespace Spark.Import
+namespace Sparkur.Hubs
 {
 	
     public class ImportProgressMessage
