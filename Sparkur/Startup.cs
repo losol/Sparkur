@@ -35,16 +35,22 @@ namespace Sparkur
         {
             SparkSettings sparkSettings = new SparkSettings();
             Configuration.Bind("SparkSettings", sparkSettings);
-
+            
             // TODO: Update mong=>mongo after next alpha
             MongStoreSettings storeSettings = new MongStoreSettings();
             Configuration.Bind("MongStoreSettings", storeSettings);
 
-            services.Configure<ExamplesSettings>(Configuration.GetSection("ExamplesSettings"));
+            ExamplesSettings examplesSettings = new ExamplesSettings();
+            Configuration.Bind("ExamplesSettings", examplesSettings);
+
+            services.Configure<ExamplesSettings>(options => Configuration.GetSection("ExamplesSettings").Bind(options));
             
             services.AddMongoFhirStore(storeSettings);
             services.AddFhir(sparkSettings);
+
+
             services.AddSingleton<SparkSettings>(sparkSettings);
+            services.AddSingleton<ExamplesSettings>(examplesSettings);
 
             services.Configure<CookiePolicyOptions>(options =>
             {
