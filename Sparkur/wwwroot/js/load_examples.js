@@ -9,12 +9,12 @@ function addListItem(text, list) {
     document.getElementById(list).appendChild(li);
 }
 
-connection.on("UpdateProgress", function (message, progress) {
+connection.on("UpdateProgress", function (message) {
 
     // var output = $("#resultmessage");
-    var n = parseInt(message.Progress);
+    var n = parseInt(message.progress);
 
-    addListItem("Status: <b>" + n + "%</b> " + message.Message + ' ' + progress, "messagesList");
+    addListItem(message.progress + '%: ' + message.message, "messagesList");
 
     //var percetage = $("#percentage");
     //percetage.html(message.Progress + "%");
