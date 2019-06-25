@@ -68,6 +68,11 @@ namespace Sparkur.Hubs
 
 		private int _progress = 0;
 
+		public async System.Threading.Tasks.Task Ping(string message)
+        {
+            await Clients.All.SendAsync("Pong", "Pong");
+        }
+
 		public async System.Threading.Tasks.Task SendProgressUpdate(string message, int progress)
 		{
 
