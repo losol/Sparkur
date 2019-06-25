@@ -17,7 +17,7 @@ namespace Sparkur.Hubs
 
 	public class InitializerHub : Hub
 	{
-		private readonly int limitPerType = 50; //0 for no limit at all.
+		private int _progress = 0;
 
 		private List<Resource> resources;
 
@@ -44,15 +44,8 @@ namespace Sparkur.Hubs
 			var list = new List<Resource>();
 
 			Bundle data;
-			if (limitPerType == 0)
-			{
-				data = Examples.ImportEmbeddedZip(_examplesSettings.FilePath).ToBundle(localhost.DefaultBase);
-			}
-			else
-			{
-				data = Examples.ImportEmbeddedZip(_examplesSettings.FilePath).LimitPerType(limitPerType).ToBundle(localhost.DefaultBase);
-			}
-
+			data = Examples.ImportEmbeddedZip(_examplesSettings.FilePath).ToBundle(localhost.DefaultBase);
+			
 			if (data.Entry != null && data.Entry.Count() != 0)
 			{
 				foreach (var entry in data.Entry)
@@ -66,11 +59,11 @@ namespace Sparkur.Hubs
 			return list;
 		}
 
-		private int _progress = 0;
+		
 
 		public async System.Threading.Tasks.Task Ping(string message)
         {
-            await Clients.All.SendAsync("Pong", "Pong");
+            await Clients.All.SendAsync("Pong", "Pong " + _examplesSettings.FilePath);
         }
 
 		public async System.Threading.Tasks.Task SendProgressUpdate(string message, int progress)
