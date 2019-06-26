@@ -62,36 +62,3 @@ document.getElementById("clearButton").addEventListener("click", function (event
     });
     event.preventDefault();
 });
-
-
-// ----------
-
-$(document).ready(function ()
-{
-    // initialize progress bar
-    var progress = 0;
-    $("#pbar").css("width", progress + "%").attr('aria-valuenow', progress);
-
-    // initialize the connection to the server
-    var progressNotifier = $.connection.initializerHub;
-
-    // client-side sendMessage function that will be called from the server-side
-    progressNotifier.client.sendMessage =
-        function (message)
-        {
-            UpdateProgress(message);
-        };
-
-    // establish the connection to the server and start server-side operation
-    $.connection.hub.start().done(
-        function ()
-        {
-            progressNotifier.server.loadData();
-        });
-
-});
-
-function UpdateProgress(message)
-{
-
-}

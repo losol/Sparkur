@@ -104,7 +104,7 @@ namespace Sparkur.Hubs
 			try
 			{
 				await SendProgressUpdate("Loading examples data...", 1);
-				this._resources = GetExampleData();
+				_resources = GetExampleData();
 
 				var resarray = _resources.ToArray();
 				ResourceCount = resarray.Count();
@@ -114,16 +114,14 @@ namespace Sparkur.Hubs
 					var res = resarray[x];
 					// Sending message:
 					var msg = Message("Importing " + res.ResourceType.ToString() + " " + res.Id + "...", x);
-					await Clients.All.SendAsync("Importing", msg);
+					await SendProgressUpdate(msg.Message, msg.Progress);
 
 					try
 					{
-						//Thread.Sleep(1000);
 						Key key = res.ExtractKey();
 
 						if (res.Id != null && res.Id != "")
 						{
-
 							_fhirService.Put(key, res);
 						}
 						else
