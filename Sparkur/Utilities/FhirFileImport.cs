@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace Sparkur.Utilities
 {
-    internal static class FhirLoader
+    internal static class FhirFileImport
     {
         private static Resource ParseResource(string data)
         {
@@ -74,6 +74,35 @@ namespace Sparkur.Utilities
         public static IEnumerable<Resource> ImportZip(string filename)
         {
             return File.ReadAllBytes(filename).ExtractZipEntries().SelectMany(ImportData); ;
+        }
+
+        public static IEnumerable<Resource> ImportEmbeddedZip(string path)
+        {
+            return GetPathAsBytes(path).ExtractResourcesFromZip();
+        }
+
+        public static byte[] GetPathAsBytes(string path)
+        {
+            return File.ReadAllBytes(path);
+        }
+
+        public static Bundle ToBundle(this IEnumerable<Resource> resources, Uri _base)
+        {
+            Bundle bundle = new Bundle();
+            foreach (Resource resource in resources)
+            {
+                // Make sure that resources without id's are posted.
+                if (resource.Id != null)
+                {
+                    bundle.Append(Bundle.HTTPVerb.PUT, resource);
+                }
+                else
+                {
+                    bundle.Append(Bundle.HTTPVerb.POST, resource);
+                }
+            }
+
+            return bundle;
         }
 
     }
