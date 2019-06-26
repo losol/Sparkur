@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace Sparkur.Hubs
 {
 
-	public class InitializerHub : Hub
+	public class MaintenanceHub : Hub
 	{
 		private int _progress = 0;
 
@@ -29,7 +29,7 @@ namespace Sparkur.Hubs
 
 		private int ResourceCount;
 
-		public InitializerHub(IFhirService fhirService, ILocalhost localhost, IFhirStoreAdministration fhirStoreAdministration, IFhirIndex fhirIndex, ExamplesSettings examplesSettings)
+		public MaintenanceHub(IFhirService fhirService, ILocalhost localhost, IFhirStoreAdministration fhirStoreAdministration, IFhirIndex fhirIndex, ExamplesSettings examplesSettings)
 		{
 			_localhost = localhost;
 			_fhirService = fhirService;

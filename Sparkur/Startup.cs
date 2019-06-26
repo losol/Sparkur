@@ -95,7 +95,7 @@ namespace Sparkur
             app.UseSignalR(routes =>
             {
                 routes.MapHub<ChatHub>("/chatHub");
-                routes.MapHub<InitializerHub>("/initializerHub");
+                routes.MapHub<MaintenanceHub>("/initializerHub");
             });
 
             app.UseFhir(routes =>
