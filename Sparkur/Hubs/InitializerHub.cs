@@ -19,23 +19,22 @@ namespace Sparkur.Hubs
 	{
 		private int _progress = 0;
 
-		private List<Resource> resources;
+		private List<Resource> _resources = null;
 
-		private IFhirService fhirService;
-		private ILocalhost localhost;
-		private IFhirStoreAdministration fhirStoreAdministration;
-		private IFhirIndex fhirIndex;
+		private IFhirService _fhirService;
+		private ILocalhost _localhost;
+		private IFhirStoreAdministration _fhirStoreAdministration;
+		private IFhirIndex _fhirIndex;
 		private ExamplesSettings _examplesSettings;
 
 		private int ResourceCount;
 
 		public InitializerHub(IFhirService fhirService, ILocalhost localhost, IFhirStoreAdministration fhirStoreAdministration, IFhirIndex fhirIndex, ExamplesSettings examplesSettings)
 		{
-			this.localhost = localhost;
-			this.fhirService = fhirService;
-			this.fhirStoreAdministration = fhirStoreAdministration;
-			this.fhirIndex = fhirIndex;
-			this.resources = null;
+			_localhost = localhost;
+			_fhirService = fhirService;
+			_fhirStoreAdministration = fhirStoreAdministration;
+			_fhirIndex = fhirIndex;
 			_examplesSettings = examplesSettings;
 		}
 
@@ -44,7 +43,7 @@ namespace Sparkur.Hubs
 			var list = new List<Resource>();
 
 			Bundle data;
-			data = Examples.ImportEmbeddedZip(_examplesSettings.FilePath).ToBundle(localhost.DefaultBase);
+			data = FhirFileImport.ImportEmbeddedZip(_examplesSettings.FilePath).ToBundle(_localhost.DefaultBase);
 			
 			if (data.Entry != null && data.Entry.Count() != 0)
 			{
@@ -59,16 +58,8 @@ namespace Sparkur.Hubs
 			return list;
 		}
 
-		
-
-		public async System.Threading.Tasks.Task Ping(string message)
-        {
-            await Clients.All.SendAsync("Pong", "Pong " + _examplesSettings.FilePath);
-        }
-
 		public async System.Threading.Tasks.Task SendProgressUpdate(string message, int progress)
 		{
-
 			_progress = progress;
 
 			var msg = new ImportProgressMessage
@@ -82,7 +73,7 @@ namespace Sparkur.Hubs
 
 		private async System.Threading.Tasks.Task Progress(string message)
 		{
-			SendProgressUpdate(message, _progress);
+			await SendProgressUpdate(message, _progress);
 		}
 
 		private ImportProgressMessage Message(string message, int idx)
@@ -95,32 +86,32 @@ namespace Sparkur.Hubs
 			return msg;
 		}
 
-		public void ClearStore() {
+		public async void ClearStore() {
 			try {
-				SendProgressUpdate("Clearing the database...", 0);
-				fhirStoreAdministration.Clean();
-				SendProgressUpdate("Database cleared", 100);
+				await SendProgressUpdate("Clearing the database...", 0);
+				_fhirStoreAdministration.Clean();
+				await SendProgressUpdate("Database cleared", 100);
 			} 
 			catch (Exception e) {
-				SendProgressUpdate("ERROR CLEARING :(", 100);
+				await SendProgressUpdate("ERROR CLEARING :(", 100);
 			}
 
 		}
-		public void LoadData()
+		public async void LoadData()
 		{
 			var messages = new StringBuilder();
 			messages.AppendLine("Import completed!");
 			try
 			{
 				//cleans store and index
-				SendProgressUpdate("Clearing the database...", 0);
-				fhirStoreAdministration.Clean();
-				fhirIndex.Clean();
+				await SendProgressUpdate("Clearing the database...", 0);
+				_fhirStoreAdministration.Clean();
+				_fhirIndex.Clean();
 
-				SendProgressUpdate("Loading examples data...", 5);
-				this.resources = GetExampleData();
+				await SendProgressUpdate("Loading examples data...", 5);
+				this._resources = GetExampleData();
 
-				var resarray = resources.ToArray();
+				var resarray = _resources.ToArray();
 				ResourceCount = resarray.Count();
 
 				for (int x = 0; x <= ResourceCount - 1; x++)
@@ -128,7 +119,7 @@ namespace Sparkur.Hubs
 					var res = resarray[x];
 					// Sending message:
 					var msg = Message("Importing " + res.ResourceType.ToString() + " " + res.Id + "...", x);
-					Clients.All.SendAsync("Importing", msg);
+					await Clients.All.SendAsync("Importing", msg);
 
 					try
 					{
@@ -138,29 +129,29 @@ namespace Sparkur.Hubs
 						if (res.Id != null && res.Id != "")
 						{
 
-							fhirService.Put(key, res);
+							_fhirService.Put(key, res);
 						}
 						else
 						{
-							fhirService.Create(key, res);
+							_fhirService.Create(key, res);
 						}
 					}
 					catch (Exception e)
 					{
 						// Sending message:
 						var msgError = Message("ERROR Importing " + res.ResourceType.ToString() + " " + res.Id + "... ", x);
-						Clients.All.SendAsync("Error", msg);
+						await Clients.All.SendAsync("Error", msg);
 						messages.AppendLine(msgError.Message + ": " + e.Message);
 					}
 
 
 				}
 
-				SendProgressUpdate(messages.ToString(), 100);
+				await SendProgressUpdate(messages.ToString(), 100);
 			}
 			catch (Exception e)
 			{
-				Progress("Error: " + e.Message);
+				await Progress("Error: " + e.Message);
 			}
 		}
 		public class ImportProgressMessage
