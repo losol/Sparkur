@@ -9,7 +9,7 @@ using System.Text;
 using Spark.Engine.Interfaces;
 using Microsoft.AspNetCore.SignalR;
 using Sparkur.Config;
-using Sparkur.Helpers;
+using Sparkur.Utilities;
 using System.Threading.Tasks;
 
 namespace Sparkur.Hubs

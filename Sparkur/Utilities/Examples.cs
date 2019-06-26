@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using Hl7.Fhir.Model;
 using Spark.Engine.Extensions;
-using Sparkur.Helpers;
+using Sparkur.Utilities;
 
-namespace Sparkur.Helpers
+namespace Sparkur.Utilities
 {
 
     public static class Examples
