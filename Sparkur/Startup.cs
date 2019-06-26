@@ -15,8 +15,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Spark.Engine;
 using Spark.Mongo;
-using Sparkur.Services;
 using Spark.Engine.Extensions;
+using Sparkur.Hubs;
+using Sparkur.Config;
 
 namespace Sparkur
 {
@@ -34,18 +35,22 @@ namespace Sparkur
         {
             SparkSettings sparkSettings = new SparkSettings();
             Configuration.Bind("SparkSettings", sparkSettings);
-
+            
             // TODO: Update mong=>mongo after next alpha
             MongStoreSettings storeSettings = new MongStoreSettings();
             Configuration.Bind("MongStoreSettings", storeSettings);
 
-            //services.AddSingleton<ISettings,Settings>(e => 
-            //    Configuration.Get<Settings>()
-            //);
+            ExamplesSettings examplesSettings = new ExamplesSettings();
+            Configuration.Bind("ExamplesSettings", examplesSettings);
+
+            services.Configure<ExamplesSettings>(options => Configuration.GetSection("ExamplesSettings").Bind(options));
             
             services.AddMongoFhirStore(storeSettings);
             services.AddFhir(sparkSettings);
+
+
             services.AddSingleton<SparkSettings>(sparkSettings);
+            services.AddSingleton<ExamplesSettings>(examplesSettings);
 
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -62,6 +67,8 @@ namespace Sparkur
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -84,6 +91,11 @@ namespace Sparkur
             app.UseCookiePolicy();
 
             app.UseAuthentication();
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<MaintenanceHub>("/initializerHub");
+            });
 
             app.UseFhir(routes =>
             {

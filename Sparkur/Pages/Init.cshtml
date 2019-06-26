@@ -1,0 +1,25 @@
+@page
+@inject Spark.Engine.SparkSettings SparkSettings
+
+<div class="container">
+    <h1>Initialize database</h1>
+    <ul>
+        <li>Fhir Endpoint: @SparkSettings.Endpoint</li>
+        <li>FhirRelease: @SparkSettings.FhirRelease </li>
+        <li>Permissive parsing: @SparkSettings.ParserSettings</li>
+        <li>Spark version: @SparkSettings.Version</li>
+    </ul>
+    <div class="row">
+        <div class="col-6">
+            <input type="button" id="initButton" value="Initialize database" />
+        </div>
+        <div class="col-6">
+            <input type="button" id="clearButton" value="Clear database" />
+        </div>
+        <div class="col-6">
+            <ul id="messagesList"></ul>
+        </div>
+    </div>
+</div>
+<script src="~/lib/signalr/signalr.js"></script>
+<script src="~/js/admin_maintenance.js"></script>

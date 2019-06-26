@@ -1,0 +1,26 @@
+{
+  "name": "losol.sparkur",
+  "version": "0.1.0",
+  "description": "Demo project for trying Spark Fhir Server",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "copy:lib": "cp -r node_modules/@aspnet/signalr/dist/browser Sparkur/wwwroot/lib/signalr",
+    "clean:lib": "rimraf ./Sparkur/wwwroot/lib/*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/losol/Sparkur.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/losol/Sparkur/issues"
+  },
+  "homepage": "https://github.com/losol/Sparkur#readme",
+  "dependencies": {
+    "@aspnet/signalr": "^1.1.4"
+  },
+  "devDependencies": {
+    "rimraf": "^2.6.3"
+  }
+}
