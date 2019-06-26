@@ -94,6 +94,18 @@ namespace Sparkur.Hubs
 			};
 			return msg;
 		}
+
+		public void ClearStore() {
+			try {
+				SendProgressUpdate("Clearing the database...", 0);
+				fhirStoreAdministration.Clean();
+				SendProgressUpdate("Database cleared", 100);
+			} 
+			catch (Exception e) {
+				SendProgressUpdate("ERROR CLEARING :(", 100);
+			}
+
+		}
 		public void LoadData()
 		{
 			var messages = new StringBuilder();

@@ -37,14 +37,22 @@ connection.on("Pong", function (message) {
 });
 
 connection.start().then(function(){
-    document.getElementById("sendButton").disabled = false;
+    document.getElementById("initButton").disabled = false;
 }).catch(function (err) {
     return console.error(err.toString());
 });
 
-document.getElementById("sendButton").addEventListener("click", function (event) {
+document.getElementById("initButton").addEventListener("click", function (event) {
     var message = "test";
     connection.invoke("LoadData").catch(function (err) {
+        return console.error(err.toString());
+    });
+    event.preventDefault();
+});
+
+document.getElementById("clearButton").addEventListener("click", function (event) {
+    var message = "test";
+    connection.invoke("ClearStore").catch(function (err) {
         return console.error(err.toString());
     });
     event.preventDefault();
