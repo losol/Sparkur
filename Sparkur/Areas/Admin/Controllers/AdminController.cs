@@ -7,8 +7,16 @@ using Microsoft.AspNetCore.Mvc;
 namespace Sparkur.Areas.Admin.Controllers
 {
 	[Area("Admin")]
-	public class HomeController : Controller {
+	public class AdminController : Controller {
+
+   			[Route("admin")]
 			public IActionResult Index()
+			{
+				return View();
+			}
+
+			[Route("admin/maintenance")]
+			public IActionResult Maintenance()
 			{
 				return View();
 			}

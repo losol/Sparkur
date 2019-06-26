@@ -90,6 +90,7 @@ namespace Sparkur.Hubs
 			try {
 				await SendProgressUpdate("Clearing the database...", 0);
 				_fhirStoreAdministration.Clean();
+				_fhirIndex.Clean();
 				await SendProgressUpdate("Database cleared", 100);
 			} 
 			catch (Exception e) {
@@ -97,18 +98,12 @@ namespace Sparkur.Hubs
 			}
 
 		}
-		public async void LoadData()
+		public async void LoadExamplesToStore()
 		{
 			var messages = new StringBuilder();
-			messages.AppendLine("Import completed!");
 			try
 			{
-				//cleans store and index
-				await SendProgressUpdate("Clearing the database...", 0);
-				_fhirStoreAdministration.Clean();
-				_fhirIndex.Clean();
-
-				await SendProgressUpdate("Loading examples data...", 5);
+				await SendProgressUpdate("Loading examples data...", 1);
 				this._resources = GetExampleData();
 
 				var resarray = _resources.ToArray();
