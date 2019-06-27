@@ -1,6 +1,6 @@
 "use strict";
 
-var connection = new signalR.HubConnectionBuilder().withUrl("/initializerHub").build();
+var connection = new signalR.HubConnectionBuilder().withUrl("/maintenanceHub").build();
 var progress = 0;
 
 function addListItem(text, list) {
@@ -28,6 +28,11 @@ connection.on("UpdateProgress", function (message) {
 
 }); 
 
+
+connection.on("Importing", function (message) {
+    addListItem(message, "messagesList");
+}); 
+
 connection.on("Pong", function (message) {
     var encodedMsg = "Server says " + message;
     var li = document.createElement("li");
@@ -44,7 +49,7 @@ connection.start().then(function(){
 
 document.getElementById("initButton").addEventListener("click", function (event) {
     var message = "test";
-    connection.invoke("LoadData").catch(function (err) {
+    connection.invoke("LoadExamplesToStore").catch(function (err) {
         return console.error(err.toString());
     });
     event.preventDefault();
@@ -57,36 +62,3 @@ document.getElementById("clearButton").addEventListener("click", function (event
     });
     event.preventDefault();
 });
-
-
-// ----------
-
-$(document).ready(function ()
-{
-    // initialize progress bar
-    var progress = 0;
-    $("#pbar").css("width", progress + "%").attr('aria-valuenow', progress);
-
-    // initialize the connection to the server
-    var progressNotifier = $.connection.initializerHub;
-
-    // client-side sendMessage function that will be called from the server-side
-    progressNotifier.client.sendMessage =
-        function (message)
-        {
-            UpdateProgress(message);
-        };
-
-    // establish the connection to the server and start server-side operation
-    $.connection.hub.start().done(
-        function ()
-        {
-            progressNotifier.server.loadData();
-        });
-
-});
-
-function UpdateProgress(message)
-{
-
-}

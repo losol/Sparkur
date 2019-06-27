@@ -11,10 +11,11 @@ using Microsoft.AspNetCore.SignalR;
 using Sparkur.Config;
 using Sparkur.Utilities;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Sparkur.Hubs
 {
-
+	[Authorize(Policy = "RequireAdministratorRole")]
 	public class MaintenanceHub : Hub
 	{
 		private int _progress = 0;
@@ -90,6 +91,7 @@ namespace Sparkur.Hubs
 			try {
 				await SendProgressUpdate("Clearing the database...", 0);
 				_fhirStoreAdministration.Clean();
+				_fhirIndex.Clean();
 				await SendProgressUpdate("Database cleared", 100);
 			} 
 			catch (Exception e) {
@@ -97,19 +99,13 @@ namespace Sparkur.Hubs
 			}
 
 		}
-		public async void LoadData()
+		public async void LoadExamplesToStore()
 		{
 			var messages = new StringBuilder();
-			messages.AppendLine("Import completed!");
 			try
 			{
-				//cleans store and index
-				await SendProgressUpdate("Clearing the database...", 0);
-				_fhirStoreAdministration.Clean();
-				_fhirIndex.Clean();
-
-				await SendProgressUpdate("Loading examples data...", 5);
-				this._resources = GetExampleData();
+				await SendProgressUpdate("Loading examples data...", 1);
+				_resources = GetExampleData();
 
 				var resarray = _resources.ToArray();
 				ResourceCount = resarray.Count();
@@ -119,16 +115,14 @@ namespace Sparkur.Hubs
 					var res = resarray[x];
 					// Sending message:
 					var msg = Message("Importing " + res.ResourceType.ToString() + " " + res.Id + "...", x);
-					await Clients.All.SendAsync("Importing", msg);
+					await SendProgressUpdate(msg.Message, msg.Progress);
 
 					try
 					{
-						//Thread.Sleep(1000);
 						Key key = res.ExtractKey();
 
 						if (res.Id != null && res.Id != "")
 						{
-
 							_fhirService.Put(key, res);
 						}
 						else

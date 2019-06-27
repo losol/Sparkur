@@ -18,6 +18,7 @@ using Spark.Mongo;
 using Spark.Engine.Extensions;
 using Sparkur.Hubs;
 using Sparkur.Config;
+using Sparkur.Models;
 
 namespace Sparkur
 {
@@ -59,14 +60,26 @@ namespace Sparkur
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>()
+            services.AddDbContext<ApplicationDbContext>(options => 
+                options.UseSqlite(Configuration.GetConnectionString("DefaultConnection"))
+            );
+
+            // services.AddDbContext<ApplicationDbContext>(options =>
+            //    options.UseSqlServer(
+            //        Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddDefaultIdentity<ApplicationUser>()
+                .AddRoles<IdentityRole>()
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("RequireAdministratorRole",
+                    policy => policy.RequireRole("Admin", "SuperAdmin"));
+            });
 
             services.AddSignalR();
         }
@@ -94,11 +107,15 @@ namespace Sparkur
 
             app.UseSignalR(routes =>
             {
-                routes.MapHub<MaintenanceHub>("/initializerHub");
+                routes.MapHub<MaintenanceHub>("/maintenanceHub");
             });
 
             app.UseFhir(routes =>
             {
+                routes.MapRoute(
+                    name: "Areas",
+                    template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
