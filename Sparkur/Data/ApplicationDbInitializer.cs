@@ -9,46 +9,30 @@ using Sparkur.Models;
 
 namespace Sparkur.Data
 {
-    public static class ApplicationDbInitializer
-    {
-        public async static void SeedAdmin(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration config)
-        {
-            // Add administrator role if it does not exist
-			string[] roleNames = { "Admin", "SuperAdmin" };
-			IdentityResult roleResult;
-			foreach (var roleName in roleNames)
+	public static class ApplicationDbInitializer
+	{
+		public static void SeedAdmin(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IConfiguration config)
+		{
+			context.Database.EnsureCreated();
+
+			string admin_email = config.GetValue<string>("Superadmin:Email");
+			string admin_password = config.GetValue<string>("Superadmin:Password");
+
+			if (userManager.FindByEmailAsync(admin_email).Result == null)
 			{
-				var roleExist = await roleManager.RoleExistsAsync(roleName);
-				if (!roleExist)
+				ApplicationUser user = new ApplicationUser
 				{
-					roleResult = await roleManager.CreateAsync(new IdentityRole(roleName));
+					UserName = admin_email,
+					Email = admin_email
+				};
+
+				IdentityResult result = userManager.CreateAsync(user, admin_password).Result;
+
+				if (result.Succeeded)
+				{
+					userManager.AddToRoleAsync(user, "Admin").Wait();
 				}
 			}
-
-			// Add super-admin if none exists
-			if (!userManager.GetUsersInRoleAsync("SuperAdmin").Result.Any())
-			{
-				_ = config.GetValue<string>("Superadmin:Email") ?? throw new ArgumentException("SuperAdmin email not set. Please check install documentation");
-				_ = config.GetValue<string>("Superadmin:Password") ?? throw new ArgumentException("SuperAdmin password not set. Please check install documentation");
-
-				var user = await userManager.FindByEmailAsync(config.GetValue<string>("Superadmin:Email"));
-
-				if (user == null)
-				{
-					var superadmin = new ApplicationUser
-                    {
-						UserName = config.GetValue<string>("Superadmin:Email"),
-						Email = config.GetValue<string>("Superadmin:Email"),
-						EmailConfirmed = true
-					};
-					string UserPassword = config.GetValue<string>("Superadmin:Password");
-					var createSuperAdmin = await userManager.CreateAsync(superadmin, UserPassword);
-					if (createSuperAdmin.Succeeded)
-					{
-						await userManager.AddToRoleAsync(superadmin, "SuperAdmin");
-					}
-				}
-            }
-        }
-    }
+		}
+	}
 }

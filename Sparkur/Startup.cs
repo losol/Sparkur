@@ -18,6 +18,7 @@ using Spark.Mongo;
 using Spark.Engine.Extensions;
 using Sparkur.Hubs;
 using Sparkur.Config;
+using Sparkur.Models;
 
 namespace Sparkur
 {
@@ -67,7 +68,8 @@ namespace Sparkur
             //    options.UseSqlServer(
             //        Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDefaultIdentity<IdentityUser>()
+            services.AddDefaultIdentity<ApplicationUser>()
+                .AddRoles<IdentityRole>()
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 

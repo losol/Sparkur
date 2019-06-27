@@ -30,12 +30,9 @@ namespace Sparkur
 				var services = scope.ServiceProvider;
 				try
 				{
-					// var context = services.GetRequiredService<ApplicationDbContext>();
-
-                    // Seed admin and superadmin roles, and add superadmin spesicfied in config.
+					var context = services.GetRequiredService<ApplicationDbContext>();
                     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-                    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-					ApplicationDbInitializer.SeedAdmin(userManager, roleManager, config);
+					ApplicationDbInitializer.SeedAdmin(context, userManager, config);
 				}
 				catch (Exception ex)
 				{
