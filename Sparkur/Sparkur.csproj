@@ -17,4 +17,8 @@
     <PackageReference Include="Spark.Mongo.R4" Version="1.3.0-alpha01" />
   </ItemGroup>
 
+<ItemGroup>
+  <None Include="$(SolutionDir)Sparkur\Examples\**" 
+        CopyToOutputDirectory="PreserveNewest" />
+</ItemGroup>
 </Project>
