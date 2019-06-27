@@ -1,0 +1,29 @@
+version: "3.1"  
+services:  
+  sparkur:
+    container_name: sparkur
+    restart: always
+    build:
+      context: .
+      dockerfile: ./Sparkur/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - MongStoreSettings__Url=mongodb://root:CosmicTopSecret@mongodb:27017/spark?authSource=admin
+    ports:
+      - "5555:80"
+      - "44348:443"
+    depends_on:
+      - mongodb
+  mongodb:
+    container_name: mongodb
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: CosmicTopSecret
+      # MONGO_INITDB_DATABASE: spark
+    # volumes:d
+      # - ${WEBAPP_STORAGE_HOME}/site:/data/db
+      #- ./data:/data/db
+    ports:
+      - "27017:27017"
