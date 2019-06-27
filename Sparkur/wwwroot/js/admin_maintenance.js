@@ -1,6 +1,6 @@
 "use strict";
 
-var connection = new signalR.HubConnectionBuilder().withUrl("/initializerHub").build();
+var connection = new signalR.HubConnectionBuilder().withUrl("/maintenanceHub").build();
 var progress = 0;
 
 function addListItem(text, list) {

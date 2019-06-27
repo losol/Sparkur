@@ -11,10 +11,11 @@ using Microsoft.AspNetCore.SignalR;
 using Sparkur.Config;
 using Sparkur.Utilities;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Sparkur.Hubs
 {
-
+	[Authorize(Policy = "RequireAdministratorRole")]
 	public class MaintenanceHub : Hub
 	{
 		private int _progress = 0;

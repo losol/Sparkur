@@ -75,6 +75,12 @@ namespace Sparkur
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("RequireAdministratorRole",
+                    policy => policy.RequireRole("Admin", "SuperAdmin"));
+            });
+
             services.AddSignalR();
         }
 
@@ -101,7 +107,7 @@ namespace Sparkur
 
             app.UseSignalR(routes =>
             {
-                routes.MapHub<MaintenanceHub>("/initializerHub");
+                routes.MapHub<MaintenanceHub>("/maintenanceHub");
             });
 
             app.UseFhir(routes =>
