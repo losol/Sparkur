@@ -12,6 +12,8 @@ using Sparkur.Config;
 using Sparkur.Utilities;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace Sparkur.Hubs
 {
@@ -27,24 +29,27 @@ namespace Sparkur.Hubs
 		private IFhirStoreAdministration _fhirStoreAdministration;
 		private IFhirIndex _fhirIndex;
 		private ExamplesSettings _examplesSettings;
+		private IHostingEnvironment _hostingEnvironment;
 
 		private int ResourceCount;
 
-		public MaintenanceHub(IFhirService fhirService, ILocalhost localhost, IFhirStoreAdministration fhirStoreAdministration, IFhirIndex fhirIndex, ExamplesSettings examplesSettings)
+		public MaintenanceHub(IFhirService fhirService, ILocalhost localhost, IFhirStoreAdministration fhirStoreAdministration, IFhirIndex fhirIndex, ExamplesSettings examplesSettings, IHostingEnvironment hostingEnvironment)
 		{
 			_localhost = localhost;
 			_fhirService = fhirService;
 			_fhirStoreAdministration = fhirStoreAdministration;
 			_fhirIndex = fhirIndex;
 			_examplesSettings = examplesSettings;
+			_hostingEnvironment = hostingEnvironment;
 		}
 
 		public List<Resource> GetExampleData()
 		{
 			var list = new List<Resource>();
+			string examplePath = Path.Combine(_hostingEnvironment.ContentRootPath, _examplesSettings.FilePath);
 
 			Bundle data;
-			data = FhirFileImport.ImportEmbeddedZip(_examplesSettings.FilePath).ToBundle(_localhost.DefaultBase);
+			data = FhirFileImport.ImportEmbeddedZip(examplePath).ToBundle(_localhost.DefaultBase);
 			
 			if (data.Entry != null && data.Entry.Count() != 0)
 			{
