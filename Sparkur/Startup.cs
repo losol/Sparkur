@@ -19,6 +19,7 @@ using Spark.Engine.Extensions;
 using Sparkur.Hubs;
 using Sparkur.Config;
 using Sparkur.Models;
+using Spark.Mongo.Extensions;
 
 namespace Sparkur
 {
@@ -37,9 +38,8 @@ namespace Sparkur
             SparkSettings sparkSettings = new SparkSettings();
             Configuration.Bind("SparkSettings", sparkSettings);
             
-            // TODO: Update mong=>mongo after next alpha
-            MongoStoreSettings storeSettings = new MongoStoreSettings();
-            Configuration.Bind("MongoStoreSettings", storeSettings);
+            StoreSettings storeSettings = new StoreSettings();
+            Configuration.Bind("StoreSettings", storeSettings);
 
             ExamplesSettings examplesSettings = new ExamplesSettings();
             Configuration.Bind("ExamplesSettings", examplesSettings);

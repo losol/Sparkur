@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: ./Dockerfile
     environment:
-      - MongoStoreSettings__ConnectionString=mongodb://root:CosmicTopSecret@mongodb:27017/spark?authSource=admin
+      - StoreSettings__ConnectionString=mongodb://root:CosmicTopSecret@mongodb:27017/spark?authSource=admin
     ports:
       - "5555:80"
       - "44348:443"

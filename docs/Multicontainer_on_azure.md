@@ -8,7 +8,7 @@ services:
     image: losolio/sparkur
     restart: always
     environment:
-      - MongoStoreSettings__Url=mongodb://root:CosmicTopSecret@mongodb:27017/spark?authSource=admin
+      - StoreSettings__Url=mongodb://root:CosmicTopSecret@mongodb:27017/spark?authSource=admin
     ports:
       - "80:80"
       - "443:443"
