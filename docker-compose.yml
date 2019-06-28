@@ -1,4 +1,4 @@
-version: "3.1"  
+version: "3.3"  
 services:  
   sparkur:
     container_name: sparkur
@@ -11,6 +11,8 @@ services:
     ports:
       - "5555:80"
       - "44348:443"
+    links:
+      - mongodb
     depends_on:
       - mongodb
   mongodb:
@@ -19,10 +21,22 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: CosmicTopSecret
-      # MONGO_INITDB_DATABASE: spark
-      volumes:
-      - ./example_data/db_dump:/db_dump
+    # volumes:
       # - ${WEBAPP_STORAGE_HOME}/site:/data/db
-      #- ./data:/data/db
     ports:
       - "27017:27017"
+  mongosetup:
+    container_name: mongosetup
+    image: mongo
+    volumes:
+      - ./example_data/db_dump:/data/db_dump
+    depends_on:
+      - mongodb
+    links:
+      - mongodb
+    entrypoint:
+      ["mongorestore", "--uri=mongodb://root:CosmicTopSecret@mongodb:27017/spark --drop --archive=/data/db_dump/r4.archive"]
+    environment:
+      WAIT_HOSTS: mongodb:27017
+
+    
