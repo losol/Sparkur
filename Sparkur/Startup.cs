@@ -38,8 +38,8 @@ namespace Sparkur
             Configuration.Bind("SparkSettings", sparkSettings);
             
             // TODO: Update mong=>mongo after next alpha
-            MongStoreSettings storeSettings = new MongStoreSettings();
-            Configuration.Bind("MongStoreSettings", storeSettings);
+            MongoStoreSettings storeSettings = new MongoStoreSettings();
+            Configuration.Bind("MongoStoreSettings", storeSettings);
 
             ExamplesSettings examplesSettings = new ExamplesSettings();
             Configuration.Bind("ExamplesSettings", examplesSettings);
