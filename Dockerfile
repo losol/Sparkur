@@ -17,6 +17,6 @@ RUN dotnet publish "Sparkur.csproj" -c Release -o /app
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
-COPY --from=build /src/example_data ./example_data
+COPY --from=build /src/example_data/fhir_examples ./fhir_examples
 
 ENTRYPOINT ["dotnet", "Sparkur.dll"]

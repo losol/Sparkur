@@ -20,7 +20,8 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: CosmicTopSecret
       # MONGO_INITDB_DATABASE: spark
-    # volumes:d
+      volumes:
+      - ./example_data/db_dump:/db_dump
       # - ${WEBAPP_STORAGE_HOME}/site:/data/db
       #- ./data:/data/db
     ports:
