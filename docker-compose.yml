@@ -7,7 +7,9 @@ services:
       context: .
       dockerfile: ./Dockerfile
     environment:
+      - SparkSettings__Endpoint=http://localhost:5555/fhir
       - StoreSettings__ConnectionString=mongodb://root:CosmicTopSecret@mongodb:27017/spark?authSource=admin
+      - ExamplesSettings__FilePath=/app/example_data/fhir_examples/r4_examples.zip
     ports:
       - "5555:80"
       - "44348:443"
