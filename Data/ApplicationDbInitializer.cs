@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Sparkur.Data;
@@ -13,7 +14,7 @@ namespace Sparkur.Data
 	{
 		public static void SeedAdmin(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IConfiguration config)
 		{
-			context.Database.EnsureCreated();
+			context.Database.Migrate();
 
 			string admin_email = config.GetValue<string>("Superadmin:Email");
 			string admin_password = config.GetValue<string>("Superadmin:Password");
