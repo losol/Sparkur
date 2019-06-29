@@ -11,7 +11,7 @@ using Sparkur.Models;
 namespace Sparkur.Data
 {
 	public static class ApplicationDbInitializer
-	{
+	{ 
 		public static void SeedAdmin(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IConfiguration config)
 		{
 			context.Database.Migrate();
