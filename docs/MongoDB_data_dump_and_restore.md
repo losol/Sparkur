@@ -1,6 +1,6 @@
 # 
 
-mongodump --host=localhost --db=spark --authenticationDatabase admin  --username=root --password=CosmicTopSecret --archive=r4.archive.gz --gzip
+mongodump --uri=mongodb://root:CosmicTopSecret@localhost:27017/spark?authSource=admin --archive=r4.archive.gz --gzip
 
 
-mongorestore --host=localhost --db=spark --authenticationDatabase admin --username=root --password=CosmicTopSecret --drop --archive=/data/db_dump/r4.archive.gz --gzip
+mongorestore --uri=mongodb://root:CosmicTopSecret@localhost:27017/spark?authSource=admin --drop --archive=/data/db_dump/r4.archive.gz --gzip
