@@ -19,7 +19,7 @@
 			},
 			"env": {
 				"ASPNETCORE_ENVIRONMENT": "Development",
-				"ExamplesSettings:FilePath": "../example_data/fhir-examples/r4_examples.zip"
+				"ExamplesSettings:FilePath": "../example_data/fhir_examples/r4_examples.zip"
 			},
 			"sourceFileMap": {
 				"/Views": "${workspaceFolder}/Views"
