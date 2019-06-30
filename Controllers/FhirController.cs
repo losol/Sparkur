@@ -28,6 +28,15 @@ namespace Sparkur.Controllers
             _settings = settings;
         }
 
+        /// <summary>
+        /// Returns a FhirRepsonse.
+        /// </summary>
+        /// <remarks>
+        /// Comment here
+        /// </remarks>
+        /// <param name="type">The first name to search for</param>
+        /// <param name="id">The last name to search for</param>
+        /// <returns>FhirResponse</returns>
         [HttpGet("{type}/{id}")]
         public ActionResult<FhirResponse> Read(string type, string id)
         {
