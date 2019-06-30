@@ -20,6 +20,7 @@ using Sparkur.Hubs;
 using Sparkur.Config;
 using Sparkur.Models;
 using Spark.Mongo.Extensions;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace Sparkur
 {
@@ -75,6 +76,12 @@ namespace Sparkur
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+            // NEW CODE STARTS HERE
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+            });
+
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("RequireAdministratorRole",
@@ -119,6 +126,16 @@ namespace Sparkur
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+            });
+
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
 
             app.UseMvc();
