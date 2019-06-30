@@ -12,13 +12,13 @@ namespace Sparkur.Areas.Admin.Controllers
 	public class AdminController : Controller {
 
 			
-   			[Route("admin")]
+   			[Route("admin"), HttpGet]
 			public IActionResult Index()
 			{
 				return View();
 			}
 
-			[Route("admin/maintenance")]
+			[Route("admin/maintenance"), HttpGet]
 			public IActionResult Maintenance()
 			{
 				return View();
