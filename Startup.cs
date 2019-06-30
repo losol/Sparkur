@@ -76,10 +76,9 @@ namespace Sparkur
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            // NEW CODE STARTS HERE
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+                c.SwaggerDoc("v1", new Info { Title = "FHIR API", Version = "v1" });
             });
 
             services.AddAuthorization(options =>
