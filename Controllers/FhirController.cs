@@ -131,7 +131,7 @@ namespace Sparkur.Controllers
             return _fhirService.Search(type, searchparams, start);
         }
 
-        [HttpPost("{type}/_search"), HttpGet("{type}")]
+        [HttpPost("{type}/_search")]
         public FhirResponse SearchWithOperator(string type)
         {
             // todo: get tupled parameters from post.
