@@ -2,7 +2,23 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
     <h1 class="display-4">Spark FHIR server</h1>
-    <p>Endpoint: @Settings.Endpoint</p>
+    <p class="lead">Endpoint: @Settings.Endpoint</p>
+  </div>
+</div>
+
+<div class="container">
+    <pre><code class="language-markdown">
+# Run your own server in 5 minutes!
+
+## Clone the repository
+git clone https://github.com/losol/Sparkur.git
+cd Sparkur
+
+## Build and run the application
+docker-compose build
+docker-compose up
+    </code></pre>
 </div>

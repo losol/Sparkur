@@ -8,17 +8,13 @@ using Microsoft.AspNetCore.Mvc;
 namespace Sparkur.Areas.Admin.Controllers
 {
 	[Authorize(Policy = "RequireAdministratorRole")]
-	[Area("Admin")]
 	public class AdminController : Controller {
 
-			
-   			[Route("admin"), HttpGet]
 			public IActionResult Index()
 			{
 				return View();
 			}
-
-			[Route("admin/maintenance"), HttpGet]
+			
 			public IActionResult Maintenance()
 			{
 				return View();
