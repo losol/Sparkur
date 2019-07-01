@@ -20,6 +20,7 @@ using Sparkur.Hubs;
 using Sparkur.Config;
 using Sparkur.Models;
 using Spark.Mongo.Extensions;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace Sparkur
 {
@@ -75,6 +76,11 @@ namespace Sparkur
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "FHIR API", Version = "v1" });
+            });
+
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("RequireAdministratorRole",
@@ -105,10 +111,17 @@ namespace Sparkur
 
             app.UseAuthentication();
 
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "FHIR API");
+            });
             app.UseSignalR(routes =>
             {
                 routes.MapHub<MaintenanceHub>("/maintenanceHub");
             });
+
+
 
             app.UseFhir(routes =>
             {
@@ -116,6 +129,8 @@ namespace Sparkur
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+
 
             app.UseMvc();
         }
